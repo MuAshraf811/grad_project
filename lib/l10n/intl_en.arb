@@ -1,0 +1,23 @@
+{
+ "hello" : "Hello",
+ "title" : "Title",
+"home" : "home",
+"settings" : "Settings", 
+"search" : "Search", 
+"cart" : "Cart", 
+"rate" : "Rate us" ,
+"support" : "Support",
+"payment" : "payment", 
+"logOut" : "LogOut",
+"notifications" : "Notifications", 
+"account" : "Account", 
+"theme" : "Dark Theme",
+"google" : "Continue with google",
+"facebook" : "Continue with facebook", 
+"forget" : "Forget your password", 
+"lang" : "Language",
+"en" : "English",
+"ar" : "Arabic",
+"de" : "German"
+
+}
