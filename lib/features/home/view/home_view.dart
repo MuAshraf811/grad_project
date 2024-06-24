@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/features/home/logic/cubit/discount/offers_cubit.dart';
+import 'package:graduation_project/features/home/logic/cubit/doctors_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/home_bloc_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/navigation_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/product/cubit/product_cubit.dart';
@@ -25,6 +26,9 @@ class HomePageView extends StatelessWidget {
         ),
         BlocProvider<OffersCubit>(
           create: (context) => OffersCubit()..getProductDiscount(),
+        ),
+        BlocProvider<DoctorsCubit>(
+          create: (context) => DoctorsCubit()..getDoctorsDetails(),
         ),
       ],
       child: const MainAppScreen(),

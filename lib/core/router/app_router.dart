@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/features/cart/cubit/cart_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/pharmacy/pharmacy_data_cubit.dart';
 import 'package:graduation_project/features/home/view/home_view.dart';
 import 'package:graduation_project/features/home/view/pharmacy_view.dart';
@@ -16,7 +17,11 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => HomePageView());
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider<CartCubit>(
+                  create: (context) => CartCubit(),
+                  child: HomePageView(),
+                ));
 
       case '/settings':
         return MaterialPageRoute(builder: (_) => const SettingsView());

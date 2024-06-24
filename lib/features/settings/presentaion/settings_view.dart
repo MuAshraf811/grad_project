@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/core/constants/colors.dart';
 import 'package:graduation_project/core/dummy.dart';
 import '../../../generated/l10n.dart';
+import 'location_view.dart';
 import 'widgets/theme_switch.dart';
 import 'widgets/upper_profile_widget.dart';
 
@@ -10,7 +11,7 @@ class SettingsView extends StatelessWidget {
 
   static const _titlesIcon = [
     Icons.account_box,
-    Icons.notifications,
+    Icons.location_city,
     Icons.money,
     Icons.help_center,
     Icons.star,
@@ -67,6 +68,9 @@ class SettingsView extends StatelessWidget {
                       switch (index) {
                         case 0:
                         case 1:
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LocationView(),
+                          ));
                         case 2:
                         case 3:
                         case 4:

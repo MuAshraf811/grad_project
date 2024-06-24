@@ -1,17 +1,19 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class PharmacyDetaFetcher {
+class DoctorsDetaFetcher {
   static Future<List<dynamic>> getData() async {
     final res = await http
-        .get(Uri.parse('https://ikseer.azurewebsites.net/pharmacy/pharmacy/'));
+        .get(Uri.parse('https://ikseer.azurewebsites.net/accounts/doctor/'));
 
     if (res.statusCode == 200) {
+      debugPrint('Doctors get method');
       final decodedResponse = utf8.decode(res.bodyBytes);
       return jsonDecode(decodedResponse);
     }
 
-    return ['mm'];
+    return [''];
   }
 }
