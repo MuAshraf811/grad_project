@@ -240,12 +240,14 @@ class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     super.key,
     required this.title,
+    this.padding,
   });
   final String title;
+  final double? padding;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
+      padding: EdgeInsets.symmetric(horizontal: padding ?? 18.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -255,7 +257,7 @@ class CustomAppBar extends StatelessWidget {
             },
             child: SvgHandler(
               imagePath: 'assets/svgs/arrow-left.svg',
-              height: 24,
+              height: 20,
               width: 24,
               fit: BoxFit.fill,
             ),

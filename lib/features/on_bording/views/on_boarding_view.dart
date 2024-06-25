@@ -38,7 +38,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16.0.w),
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const VerticalSpacer(height: 32),
               Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
@@ -81,7 +81,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 height: 50,
                 buttonColor: ConstantColors.appMainColor,
               ),
-              const VerticalSpacer(height: 36),
+              const VerticalSpacer(height: 28),
               const ContinueAsButton(),
               const VerticalSpacer(height: 145),
               InkWell(

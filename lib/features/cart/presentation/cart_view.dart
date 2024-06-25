@@ -6,6 +6,7 @@ import 'package:graduation_project/core/Commonwidgets%20(1)/svg_handler.dart';
 import 'package:graduation_project/core/styles/app_font_manager.dart';
 import 'package:graduation_project/core/styles/text_styles.dart';
 import 'package:graduation_project/features/cart/cubit/cart_cubit.dart';
+import 'package:graduation_project/features/checkout/view/screens/checkout_main_view.dart';
 import 'package:graduation_project/features/home/view/product_details_view.dart';
 
 class CartView extends StatelessWidget {
@@ -59,40 +60,50 @@ class CartView extends StatelessWidget {
                         )
                       ],
                     ),
-                    Container(
-                      width: 300.w,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                        color: Colors.teal,
-                        border: Border.all(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Checkout',
-                            style: getMediumStyle(
-                                fontSize: 14, color: Colors.white),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CheckOutFirstView(
+                            totalAmount: context.read<CartCubit>().totalAmount,
+                            delivery: 80,
                           ),
-                          const HorizontalSpacer(width: 4),
-                          Icon(
-                            Icons.payment_outlined,
-                            color: Colors.white,
-                            size: 14.w,
-                          ),
-                          const HorizontalSpacer(width: 8),
-                          BlocBuilder<CartCubit, CartState>(
-                            builder: (context, state) {
-                              return Text(
-                                '( ${context.read<CartCubit>().totalAmount.toString()} ) EGP',
-                                style: getMediumStyle(
-                                    fontSize: 14, color: Colors.white),
-                              );
-                            },
-                          ),
-                        ],
+                        ));
+                      },
+                      child: Container(
+                        width: 300.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                          color: Colors.teal,
+                          border: Border.all(color: Colors.teal),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Checkout',
+                              style: getMediumStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                            const HorizontalSpacer(width: 4),
+                            Icon(
+                              Icons.payment_outlined,
+                              color: Colors.white,
+                              size: 14.w,
+                            ),
+                            const HorizontalSpacer(width: 8),
+                            BlocBuilder<CartCubit, CartState>(
+                              builder: (context, state) {
+                                return Text(
+                                  '( ${context.read<CartCubit>().totalAmount.toString()} ) EGP',
+                                  style: getMediumStyle(
+                                      fontSize: 14, color: Colors.white),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

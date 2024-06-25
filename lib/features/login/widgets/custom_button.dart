@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/constants/colors.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({super.key, required this.text, required this.onTap});
+  const CustomButton(
+      {super.key, required this.text, required this.onTap, this.fontSize});
   final String text;
+  final double? fontSize;
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
@@ -13,18 +16,17 @@ class CustomButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          height: 48,
+          height: 38.h,
           decoration: BoxDecoration(
             color: ConstantColors.appMainColor,
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(6.r),
           ),
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+                fontSize: fontSize ?? 20,
               ),
             ),
           ),

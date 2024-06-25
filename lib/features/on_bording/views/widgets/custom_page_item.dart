@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 
 class CustomPageItem extends StatelessWidget {
   CustomPageItem({
@@ -17,7 +19,7 @@ class CustomPageItem extends StatelessWidget {
     'Chat with doctors'
   ];
   static const List<String> description = [
-    'You can search and easily choose the prescription, you can also use a map to explore and find nearby pharmacies',
+    'You can search and easily choose the prescription,you \ncan also use a map to explore and find nearby\n pharmacies',
     'Features like suggestions and GPT powered chats to ask for advice and questions',
     'Chat with doctors and get advice from them around the clock. You can revise and check you medicines.'
   ];
@@ -28,22 +30,22 @@ class CustomPageItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 200,
-          height: 200,
+          width: 200.w,
+          height: 200.h,
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(images[index]),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.high)),
         ),
-        const SizedBox(height: 18),
+        const VerticalSpacer(height: 18),
         Text(title[index],
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Colors.black,
             )),
-        const SizedBox(height: 18),
+        const VerticalSpacer(height: 18),
         Expanded(
           child: Text(
             description[index],
