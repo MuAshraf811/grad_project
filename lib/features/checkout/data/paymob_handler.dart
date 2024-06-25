@@ -10,7 +10,10 @@ class PayMobPayMentGetawayHandler {
       int integrationId) async {
     final authToken = await _getAuthTokenFromaApiKey(apiKey);
     final orderId = await _getOrdrtId(
-        authToken, currency, (amountInCent * 100).toString(), null);
+      authToken,
+      currency,
+      (amountInCent * 100).toString(),
+    );
 
     final paymentKey = await _getPaymentKey(authToken, orderId.toString(),
         (amountInCent * 100).toString(), currency, integrationId);
@@ -24,47 +27,29 @@ class PayMobPayMentGetawayHandler {
     final response = await Dio().post(
         "https://accept.paymob.com/api/auth/tokens",
         data: {"api_key": apiKey});
-    if (response == 200 || response == 201) {
-      return response.data['token'];
-    }
-    throw Exception(
-        'Error has occured while fetching Auth Token using api key');
+
+    return response.data['token'];
   }
 
   // second step , second method is to get the order id using auth token fetched from first step.
   // as shown getting oreer id as integer
 
-  static Future<int> _getOrdrtId(String authToken, String currency,
-      String amountInCent, Map<String, String>? shippingData) async {
-    final response = await Dio()
-        .post("https://accept.paymob.com/api/ecommerce/orders", data: {
-      "auth_token": authToken,
-      "delivery_needed": "false",
-      "items": [],
-      "amount_cents": amountInCent,
-      "currency": currency,
-      "merchant_order_id": 5,
-      "shipping_data": shippingData ??
-          {
-            "apartment": "803",
-            "email": "claudette09@exa.com",
-            "floor": "42",
-            "first_name": "Clifford",
-            "street": "Ethan Land",
-            "building": "8028",
-            "phone_number": "+86(8)9135210487",
-            "postal_code": "01898",
-            "extra_description": "8 Ram , 128 Giga",
-            "city": "Jaskolskiburgh",
-            "country": "CR",
-            "last_name": "Nicolas",
-            "state": "Utah"
-          },
-    });
-    if (response == 200 || response == 201) {
-      return response.data['token'];
-    }
-    throw Exception('Error has occured when getting order id 2nd step');
+  static Future<int> _getOrdrtId(
+    String authToken,
+    String currency,
+    String amountInCent,
+  ) async {
+    final response = await Dio().post(
+      "https://accept.paymob.com/api/ecommerce/orders",
+      data: {
+        "auth_token": authToken,
+        "delivery_needed": "false",
+        "items": [],
+        "amount_cents": amountInCent,
+        "currency": currency,
+      },
+    );
+    return response.data['id'];
   }
   // end if method and step two
   // order id will be catched  as integer value
@@ -100,17 +85,17 @@ class PayMobPayMentGetawayHandler {
           integrationId, //!  you can get it from your pay mob accound every payment method has its own id , wallets has its own id , cards also has its own id and so on
       "lock_order_when_paid": "false"
     });
-    if (response == 200 || response == 201) {
-      return response.data['token'];
-    }
-    throw Exception('Error has occured when getting order id 2nd step');
+    return response.data['token'];
   }
 
   // finally this is last method and it is used to launch the url to paymob , from here paymob will take you and finishes payment with you
   // here you will use url launcher package
 
   static _launchPayMobUrl(String paymentKey) {
+    // this whole url depends on you iframe of your account so do not forget to change it with the onr related to your account
+    // its called iFrame in paymob site
+    // choose one of two iFrames in your account
     launchUrl(Uri.parse(
-        'https://accept.paymob.com/api/acceptance/iframes/831751?payment_token=$paymentKey'));
+        'https://accept.paymob.com/api/acceptance/iframes/827738?payment_token=$paymentKey'));
   }
 }

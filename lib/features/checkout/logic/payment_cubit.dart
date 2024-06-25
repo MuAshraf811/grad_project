@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:graduation_project/features/checkout/data/payMob_payment_handler.dart';
+import 'package:graduation_project/features/checkout/data/paymob_handler.dart';
 
 part 'payment_state.dart';
 
@@ -8,6 +9,11 @@ class PaymentCubit extends Cubit<PaymentState> {
   PaymentCubit() : super(PaymentInitial());
 
   paying() async {
-    await PayMobHandler.launchPay();
+    //await PayMobHandler.launchPay();
+    await PayMobPayMentGetawayHandler.handlePayment(
+        'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RZeU1UUXdMQ0p1WVcxbElqb2lhVzVwZEdsaGJDSjkuM21qSzFKTjRTVG1DanFIbV92ME9aWHk5Y0hKOWYxZmNnaTI3MVBqakVjblBneURENVRZZkEyWVh2SEpkalZpWVp6RktndUV4Tm1JMmprWThtV2pOZnc=',
+        'EGP',
+        500,
+        4505022);
   }
 }
