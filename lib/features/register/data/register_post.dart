@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 class PostRegisterationData {
   static Future<ResponseModel> confirmWithOTP({required String otp}) async {
     //accounts/token/verify/
-    final url = Uri.parse(
-        'https://ikseer.azurewebsites.net/accounts/verify-email-otp/');
+    final url =
+        Uri.parse('https://ikseer.onrender.com/accounts/verify-email-otp/');
     final response = await http.post(url, headers: {}, body: {"otp": otp});
     if (response.statusCode == 200) {
       if (kDebugMode) {
@@ -34,8 +34,7 @@ class PostRegisterationData {
     required String lastName,
     required String gender,
   }) async {
-    final url =
-        Uri.parse('https://ikseer.azurewebsites.net/accounts/register/');
+    final url = Uri.parse('https://ikseer.onrender.com/accounts/register/');
     final response = await http.post(url, headers: {}, body: {
       "username": userNmae,
       "email": email,

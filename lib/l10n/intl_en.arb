@@ -12,6 +12,7 @@
 "notifications" : "Notifications", 
 "account" : "Account", 
 "theme" : "Dark Theme",
+"locations":"Locations",
 "google" : "Continue with google",
 "facebook" : "Continue with facebook", 
 "forget" : "Forget your password", 

@@ -25,11 +25,9 @@ class MainAppScreen extends StatefulWidget {
   State<MainAppScreen> createState() => _MainAppScreenState();
 }
 
-class _MainAppScreenState extends State<MainAppScreen>
-    with AutomaticKeepAliveClientMixin {
+class _MainAppScreenState extends State<MainAppScreen> with RestorationMixin {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -62,6 +60,7 @@ class _MainAppScreenState extends State<MainAppScreen>
                         height: 240.h,
                         width: double.infinity,
                         child: GridView.builder(
+                          restorationId: 'homePage',
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
@@ -99,7 +98,12 @@ class _MainAppScreenState extends State<MainAppScreen>
                       return SizedBox(
                           height: 233.h,
                           child: ListView.builder(
-                            itemCount: 20,
+                            restorationId: 'homePage',
+                            itemCount: context
+                                    .read<AllProductCubit>()
+                                    .productDetails!
+                                    .length -
+                                1,
                             itemBuilder: (context, index) => InkWell(
                               onTap: () =>
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -153,6 +157,7 @@ class _MainAppScreenState extends State<MainAppScreen>
                       return SizedBox(
                         height: 99.h,
                         child: ListView.builder(
+                          restorationId: 'homePage',
                           itemCount: context
                               .read<OffersCubit>()
                               .productDiscount!
@@ -198,6 +203,7 @@ class _MainAppScreenState extends State<MainAppScreen>
                       return SizedBox(
                           height: 105.h,
                           child: ListView.builder(
+                            restorationId: 'homePage',
                             itemCount: 15,
                             itemBuilder: (context, index) => DummyProduct(
                                 price: context
@@ -230,7 +236,7 @@ class _MainAppScreenState extends State<MainAppScreen>
                     return Padding(
                       padding: EdgeInsets.only(left: 6.w),
                       child: SizedBox(
-                        height: 210.h,
+                        height: 200.h,
                         child: ListView.builder(
                           itemCount:
                               context.read<DoctorsCubit>().doctorsData!.length,
@@ -272,5 +278,8 @@ class _MainAppScreenState extends State<MainAppScreen>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  String? get restorationId => 'homePage';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {}
 }

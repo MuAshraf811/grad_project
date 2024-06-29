@@ -180,6 +180,16 @@ class S {
     );
   }
 
+  /// `Locations`
+  String get locations {
+    return Intl.message(
+      'Locations',
+      name: 'locations',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Continue with google`
   String get google {
     return Intl.message(

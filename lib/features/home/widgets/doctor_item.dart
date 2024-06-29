@@ -21,7 +21,7 @@ class DoctorItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 125.w,
+      width: 130.w,
       margin: EdgeInsets.symmetric(horizontal: 5.w),
       padding: EdgeInsets.symmetric(vertical: 6.h),
       decoration: BoxDecoration(

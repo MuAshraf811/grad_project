@@ -29,7 +29,7 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final listTileTitles = [
       S.of(context).account,
-      S.of(context).notifications,
+      S.of(context).locations,
       S.of(context).payment,
       S.of(context).support,
       S.of(context).rate,
@@ -74,7 +74,8 @@ class SettingsView extends StatelessWidget {
                         case 2:
                         case 3:
                         case 4:
-                        default:
+                        case 5:
+                          Navigator.pushReplacementNamed(context, '/logIn');
                       }
                     },
                     child: ListTile(

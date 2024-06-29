@@ -7,7 +7,6 @@ import 'package:graduation_project/core/styles/text_styles.dart';
 import 'package:graduation_project/features/checkout/logic/payment_cubit.dart';
 import 'package:graduation_project/features/home/view/product_details_view.dart';
 import 'package:graduation_project/features/login/widgets/custom_button.dart';
-import 'package:paymob_payment/paymob_payment.dart';
 
 class CheckOutFirstView extends StatelessWidget {
   const CheckOutFirstView(
@@ -104,51 +103,81 @@ class CheckOutFirstView extends StatelessWidget {
                 border: Border.all(color: Colors.teal),
               ),
               padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Complete Your Shipping Information',
-                    style: getMediumStyle(fontSize: 12, color: Colors.red),
-                  ),
-                  const VerticalSpacer(height: 16),
-                  CustomTextFormField(
-                    label: 'address In details',
-                    keyboardType: TextInputType.emailAddress,
-                    labelStyle:
-                        getRegularStyle(fontSize: 12, color: Colors.grey),
-                    suffixIcon:
-                        Icon(Icons.location_on_outlined, color: Colors.teal),
-                    fillColor: Colors.grey.withOpacity(0.06),
-                    borderRaduis: 4.r,
-                  ),
-                  const VerticalSpacer(height: 10),
-                  CustomTextFormField(
-                    label: 'Mobile Number',
-                    keyboardType: TextInputType.phone,
-                    labelStyle:
-                        getRegularStyle(fontSize: 12, color: Colors.grey),
-                    fillColor: Colors.grey.withOpacity(0.06),
-                    suffixIcon: Icon(
-                      Icons.phone_android_outlined,
-                      color: Colors.teal,
+              child: Form(
+                key: context.read<PaymentCubit>().payKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Complete Your Shipping Information',
+                      style: getMediumStyle(fontSize: 12, color: Colors.red),
                     ),
-                    borderRaduis: 4.r,
-                  ),
-                  const VerticalSpacer(height: 10),
-                  CustomTextFormField(
-                    label: 'Full Name',
-                    keyboardType: TextInputType.phone,
-                    labelStyle:
-                        getRegularStyle(fontSize: 12, color: Colors.grey),
-                    fillColor: Colors.grey.withOpacity(0.06),
-                    suffixIcon: Icon(
-                      Icons.person_2_outlined,
-                      color: Colors.teal,
+                    const VerticalSpacer(height: 16),
+                    CustomTextFormField(
+                      label: 'address In details',
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'This Field must have value';
+                        }
+                        return null;
+                      },
+                      textEditingController:
+                          context.read<PaymentCubit>().addressController,
+                      keyboardType: TextInputType.emailAddress,
+                      labelStyle:
+                          getRegularStyle(fontSize: 12, color: Colors.grey),
+                      suffixIcon:
+                          Icon(Icons.location_on_outlined, color: Colors.teal),
+                      fillColor: Colors.grey.withOpacity(0.06),
+                      borderRaduis: 4.r,
                     ),
-                    borderRaduis: 4.r,
-                  ),
-                ],
+                    const VerticalSpacer(height: 10),
+                    CustomTextFormField(
+                      label: 'Mobile Number',
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'This Field must have value';
+                        }
+                        if (val.length != 11) {
+                          return 'Mobile Number should be 11 digits ';
+                        }
+                        return null;
+                      },
+                      textEditingController:
+                          context.read<PaymentCubit>().phoneNumberController,
+                      keyboardType: TextInputType.phone,
+                      labelStyle:
+                          getRegularStyle(fontSize: 12, color: Colors.grey),
+                      fillColor: Colors.grey.withOpacity(0.06),
+                      suffixIcon: Icon(
+                        Icons.phone_android_outlined,
+                        color: Colors.teal,
+                      ),
+                      borderRaduis: 4.r,
+                    ),
+                    const VerticalSpacer(height: 10),
+                    CustomTextFormField(
+                      label: 'Full Name',
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'This Field must have value';
+                        }
+                        return null;
+                      },
+                      textEditingController:
+                          context.read<PaymentCubit>().nameController,
+                      keyboardType: TextInputType.phone,
+                      labelStyle:
+                          getRegularStyle(fontSize: 12, color: Colors.grey),
+                      fillColor: Colors.grey.withOpacity(0.06),
+                      suffixIcon: Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.teal,
+                      ),
+                      borderRaduis: 4.r,
+                    ),
+                  ],
+                ),
               ),
             ),
             const VerticalSpacer(height: 24),
@@ -180,7 +209,13 @@ class CheckOutFirstView extends StatelessWidget {
               fontSize: 17,
               text: 'Continue ',
               onTap: () {
-                context.read<PaymentCubit>().paying();
+                if (context
+                    .read<PaymentCubit>()
+                    .payKey
+                    .currentState!
+                    .validate()) {
+                  context.read<PaymentCubit>().paying();
+                }
               },
             ),
           ],

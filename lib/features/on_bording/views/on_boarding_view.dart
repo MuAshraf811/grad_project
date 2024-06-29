@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/constants/colors.dart';
+import 'package:graduation_project/core/constants/shared_pref_constants.dart';
+import 'package:graduation_project/core/localStorage/shared_preferences_storage.dart';
 import 'package:graduation_project/core/widgets/custom_button.dart';
 import 'package:graduation_project/features/on_bording/views/widgets/continue_button.dart';
 import 'package:graduation_project/features/on_bording/views/widgets/custom_page_item.dart';
@@ -74,7 +76,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               const VerticalSpacer(height: 40),
               CustomAppButton(
                 text: 'Sign Up',
-                onTap: () {
+                onTap: () async {
+                  await SharedPreferencesManager.storeBoolVal(
+                      LocalStorageConstants.onBoardingBoolKey, true);
+                  debugPrint(
+                      'Hello, This is sharedPreferences onBoarding value checker in case of changing ');
+                  debugPrint(SharedPreferencesManager.getBool(
+                          LocalStorageConstants.onBoardingBoolKey)
+                      .toString());
                   Navigator.of(context).pushReplacementNamed('/Register');
                 },
                 width: double.infinity,

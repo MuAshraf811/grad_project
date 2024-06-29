@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/svg_handler.dart';
 import 'package:graduation_project/core/constants/colors.dart';
+import 'package:graduation_project/core/constants/shared_pref_constants.dart';
+import 'package:graduation_project/core/localStorage/shared_preferences_storage.dart';
 import 'package:graduation_project/core/styles/text_styles.dart';
 import 'package:graduation_project/features/cart/cubit/cart_cubit.dart';
 import 'package:graduation_project/features/home/widgets/new_arrival.dart';
@@ -174,39 +176,110 @@ class ProductDetailsView extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          BlocProvider.of<CartCubit>(context, listen: false)
-                              .addElementToCart(res[wantedindex]);
-                          BlocProvider.of<CartCubit>(context, listen: false)
-                              .calculateTotalAmount();
-                        },
-                        child: Container(
-                          width: 200.w,
-                          height: 40.h,
-                          decoration: BoxDecoration(
-                            color: Colors.teal,
-                            border: Border.all(color: Colors.teal),
-                            borderRadius: BorderRadius.circular(6.r),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Add To Cart',
-                                style: getMediumStyle(
-                                    fontSize: 14, color: Colors.white),
+                      child: BlocConsumer<CartCubit, CartState>(
+                        listenWhen: (previous, current) =>
+                            current is PostingDataToServerSuccess ||
+                            current is PostingDataToServer ||
+                            current is PostingDataToServerError,
+                        listener: (context, state) {
+                          if (state is PostingDataToServerError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                behavior: SnackBarBehavior.floating,
+                                showCloseIcon: true,
+                                duration: Duration(seconds: 4),
+                                padding: EdgeInsets.only(left: 32.w),
+                                margin: EdgeInsets.only(
+                                    bottom: 12.h, right: 8.w, left: 8.w),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r)),
+                                content: Text(
+                                  state.error,
+                                  style: getMediumStyle(
+                                      fontSize: 14, color: Colors.white),
+                                ),
                               ),
-                              const HorizontalSpacer(width: 18),
-                              Icon(
-                                Icons.shopping_cart_checkout_rounded,
-                                color: Colors.white,
-                                size: 18.w,
-                              )
-                            ],
-                          ),
-                        ),
+                            );
+                          }
+                          if (state is PostingDataToServerSuccess) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.teal,
+                                behavior: SnackBarBehavior.floating,
+                                showCloseIcon: true,
+                                duration: Duration(seconds: 4),
+                                padding: EdgeInsets.only(left: 32.w),
+                                margin: EdgeInsets.only(
+                                    bottom: 12.h, right: 8.w, left: 8.w),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r)),
+                                content: Text(
+                                  'Item Added To Your Cart Successfully',
+                                  style: getMediumStyle(
+                                      fontSize: 14, color: Colors.white),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        buildWhen: (previous, current) =>
+                            current is PostingDataToServer ||
+                            current is PostingDataToServerError ||
+                            current is PostingDataToServerSuccess,
+                        builder: (context, state) {
+                          if (state is PostingDataToServer) {
+                            return Container(
+                              width: 180.w,
+                              height: 40.h,
+                              decoration: BoxDecoration(color: Colors.teal),
+                              child: Center(
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: CircularProgressIndicator.adaptive(
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return InkWell(
+                            onTap: () {
+                              context.read<CartCubit>().postCartData(
+                                    productId: res[wantedindex].id,
+                                    cartId: SharedPreferencesManager.getString(
+                                        LocalStorageConstants.cartId)!,
+                                    quantity: 10,
+                                  );
+                            },
+                            child: Container(
+                              width: 200.w,
+                              height: 40.h,
+                              decoration: BoxDecoration(
+                                color: Colors.teal,
+                                border: Border.all(color: Colors.teal),
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Add To Cart',
+                                    style: getMediumStyle(
+                                        fontSize: 14, color: Colors.white),
+                                  ),
+                                  const HorizontalSpacer(width: 18),
+                                  Icon(
+                                    Icons.shopping_cart_checkout_rounded,
+                                    color: Colors.white,
+                                    size: 18.w,
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     Container(
@@ -241,9 +314,11 @@ class CustomAppBar extends StatelessWidget {
     super.key,
     required this.title,
     this.padding,
+    this.leading,
   });
   final String title;
   final double? padding;
+  final Widget? leading;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -255,12 +330,13 @@ class CustomAppBar extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: SvgHandler(
-              imagePath: 'assets/svgs/arrow-left.svg',
-              height: 20,
-              width: 24,
-              fit: BoxFit.fill,
-            ),
+            child: leading ??
+                SvgHandler(
+                  imagePath: 'assets/svgs/arrow-left.svg',
+                  height: 20,
+                  width: 24,
+                  fit: BoxFit.fill,
+                ),
           ),
           Text(
             title,

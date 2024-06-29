@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/constants/colors.dart';
 import 'package:graduation_project/core/extensions/context_extensions.dart';
+import 'package:graduation_project/core/localStorage/shared_preferences_storage.dart';
 import 'package:graduation_project/features/login/login_view.dart';
 import 'package:graduation_project/features/login/widgets/continue_with_container.dart';
 import 'package:graduation_project/features/login/widgets/custom_button.dart';
@@ -12,6 +13,7 @@ import 'package:graduation_project/features/login/widgets/custom_text_form_field
 import 'package:graduation_project/features/register/logic/register/register_cubit.dart';
 import 'package:graduation_project/features/register/phone_number_view.dart';
 import 'package:graduation_project/features/register/widgets/password_validation_part.dart';
+import '../../core/constants/shared_pref_constants.dart';
 import 'widgets/progress_stepper.dart';
 
 class RegisterView extends StatefulWidget {
@@ -180,7 +182,12 @@ class _RegisterViewState extends State<RegisterView>
                           ),
                         ),
                         TextButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              debugPrint(
+                                  'Hello, This is sharedPreferences onBoarding value checker in case of changing ');
+                              debugPrint(SharedPreferencesManager.getBool(
+                                      LocalStorageConstants.onBoardingBoolKey)
+                                  .toString());
                               Navigator.of(context)
                                   .pushReplacementNamed('/logIn');
                             },

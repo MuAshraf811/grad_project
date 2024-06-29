@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/svg_handler.dart';
+import 'package:graduation_project/core/constants/shared_pref_constants.dart';
+import 'package:graduation_project/core/localStorage/shared_preferences_storage.dart';
 import 'package:graduation_project/core/styles/app_font_manager.dart';
 import 'package:graduation_project/core/styles/text_styles.dart';
 import 'package:graduation_project/features/cart/cubit/cart_cubit.dart';
 import 'package:graduation_project/features/checkout/view/screens/checkout_main_view.dart';
 import 'package:graduation_project/features/home/view/product_details_view.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CartView extends StatelessWidget {
   const CartView({super.key});
@@ -22,8 +25,11 @@ class CartView extends StatelessWidget {
           child: Column(
             children: [
               const VerticalSpacer(height: 36),
-              CustomAppBar(title: 'Cart'),
-              const VerticalSpacer(height: 16),
+              CustomAppBar(
+                title: 'Cart View',
+                leading: const SizedBox.shrink(),
+              ),
+              const VerticalSpacer(height: 28),
               Container(
                 width: double.infinity,
                 height: 100.h,
@@ -46,17 +52,13 @@ class CartView extends StatelessWidget {
                               getMediumStyle(fontSize: 14, color: Colors.black),
                         ),
                         const HorizontalSpacer(width: 12),
-                        BlocBuilder<CartCubit, CartState>(
-                          builder: (context, state) {
-                            return Text(
-                              context.read<CartCubit>().totalAmount.toString(),
-                              style: getBoldStyle(
-                                fontSize: 17,
-                                fontFamily: FontConstants.poppinsFontFamily,
-                                color: Colors.red,
-                              ).copyWith(letterSpacing: 1.w),
-                            );
-                          },
+                        Text(
+                          '${SharedPreferencesManager.getString(LocalStorageConstants.cartTotalPrice)}',
+                          style: getBoldStyle(
+                            fontSize: 17,
+                            fontFamily: FontConstants.poppinsFontFamily,
+                            color: Colors.red,
+                          ).copyWith(letterSpacing: 1.w),
                         )
                       ],
                     ),
@@ -93,14 +95,10 @@ class CartView extends StatelessWidget {
                               size: 14.w,
                             ),
                             const HorizontalSpacer(width: 8),
-                            BlocBuilder<CartCubit, CartState>(
-                              builder: (context, state) {
-                                return Text(
-                                  '( ${context.read<CartCubit>().totalAmount.toString()} ) EGP',
-                                  style: getMediumStyle(
-                                      fontSize: 14, color: Colors.white),
-                                );
-                              },
+                            Text(
+                              '${SharedPreferencesManager.getString(LocalStorageConstants.cartTotalPrice)} EGP',
+                              style: getMediumStyle(
+                                  fontSize: 14, color: Colors.white),
                             ),
                           ],
                         ),
@@ -115,42 +113,161 @@ class CartView extends StatelessWidget {
                 thickness: 0.5.h,
               ),
               const VerticalSpacer(height: 12),
-              BlocBuilder<CartCubit, CartState>(
-                builder: (context, state) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: context.read<CartCubit>().cartList.length,
-                      itemBuilder: (context, index) => CartItem(
-                        onTap: () {
-                          context
-                              .read<CartCubit>()
-                              .RemoveElementFromCart(index);
-                          context.read<CartCubit>().calculateTotalAmount();
-                        },
-                        name: context.read<CartCubit>().cartList[index].name,
-                        amount: context
-                            .read<CartCubit>()
-                            .cartList[index]
-                            .quantity
-                            .toString(),
-                        price: context
-                            .read<CartCubit>()
-                            .cartList[index]
-                            .price
-                            .toString(),
-                        image: context
-                                .read<CartCubit>()
-                                .cartList[index]
-                                .images?[0]['image'] ??
-                            '',
+              BlocConsumer<CartCubit, CartState>(
+                listenWhen: (previous, current) => current is DeletingOrder,
+                listener: (context, state) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.teal.withOpacity(0.5),
+                      margin: EdgeInsets.only(
+                          bottom: 24.h, right: 12.w, left: 12.w),
+                      duration: Duration(seconds: 4),
+                      showCloseIcon: true,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r)),
+                      content: Row(
+                        children: [
+                          Text(
+                            'Working on it',
+                            style: getMediumStyle(
+                                fontSize: 15, color: Colors.white),
+                          ),
+                          const HorizontalSpacer(width: 8),
+                          Transform.scale(
+                            scale: 0.4,
+                            child: CircularProgressIndicator.adaptive(
+                                backgroundColor: Colors.white),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
-              ),
+                buildWhen: (previous, current) =>
+                    current is FetchingCartItems ||
+                    current is FetchingCartItemsError ||
+                    current is FetchingCartItemsSuccess ||
+                    current is FetchingCartItemsError,
+                builder: (context, state) {
+                  if (state is DeletingOrderError) {
+                    return Text(state.error);
+                  }
+                  if (state is FetchingCartItems) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CartShimmer(),
+                        const VerticalSpacer(height: 12),
+                        CartShimmer(),
+                        const VerticalSpacer(height: 12),
+                        CartShimmer(),
+                      ],
+                    );
+                  }
+                  if (state is FetchingCartItemsSuccess) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: context
+                            .read<CartCubit>()
+                            .cartListFromDataBase
+                            .length,
+                        itemBuilder: (context, index) => CartItem(
+                            amount: context
+                                .read<CartCubit>()
+                                .cartListFromDataBase[index]
+                                .quantity
+                                .toString(),
+                            image: context
+                                .read<CartCubit>()
+                                .cartListFromDataBase[index]
+                                .image,
+                            name: context
+                                .read<CartCubit>()
+                                .cartListFromDataBase[index]
+                                .productName,
+                            price: '33',
+                            onTap: index),
+                      ),
+                    );
+                  }
+                  if (state is FetchingCartItemsError) {
+                    return Center(
+                      child: Text(
+                        state.errorMessage,
+                        style: getMediumStyle(fontSize: 14, color: Colors.red),
+                      ),
+                    );
+                  }
+                  return Text('None');
+                },
+              )
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CartShimmer extends StatelessWidget {
+  const CartShimmer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.withOpacity(0.3),
+      highlightColor: Colors.white70,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            height: 80.h,
+            width: 80.w,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6.r),
+                color: Colors.grey.withOpacity(0.5)),
+          ),
+          const HorizontalSpacer(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 8.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: Colors.grey.withOpacity(0.5)),
+              ),
+              const VerticalSpacer(height: 8),
+              Container(
+                height: 8.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: Colors.grey.withOpacity(0.5)),
+              ),
+              const VerticalSpacer(height: 8),
+              Container(
+                height: 8.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: Colors.grey.withOpacity(0.5)),
+              ),
+              const VerticalSpacer(height: 8),
+              Container(
+                height: 8.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: Colors.grey.withOpacity(0.5)),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -169,7 +286,7 @@ class CartItem extends StatelessWidget {
   final String price;
   final String amount;
   final String image;
-  final VoidCallback onTap;
+  final int onTap;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -243,16 +360,22 @@ class CartItem extends StatelessWidget {
               ),
               const VerticalSpacer(height: 12),
               Transform.translate(
-                  offset: Offset(200.w, 0),
-                  child: InkWell(
-                    onTap: onTap,
-                    child: SvgHandler(
-                        imagePath: 'assets/svgs/trash.svg',
-                        height: 20,
-                        width: 20,
-                        color: Colors.red,
-                        fit: BoxFit.fill),
-                  )),
+                offset: Offset(200.w, 0),
+                child: InkWell(
+                  onTap: () async {
+                    context.read<CartCubit>().deleteOrder(context
+                        .read<CartCubit>()
+                        .cartListFromDataBase[onTap]
+                        .itemId);
+                  },
+                  child: SvgHandler(
+                      imagePath: 'assets/svgs/trash.svg',
+                      height: 20,
+                      width: 20,
+                      color: Colors.red,
+                      fit: BoxFit.fill),
+                ),
+              ),
             ],
           ),
         ],

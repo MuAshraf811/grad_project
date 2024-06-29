@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/features/cart/cubit/cart_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/discount/offers_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/doctors_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/home_bloc_cubit.dart';
@@ -34,7 +35,10 @@ class HomePageView extends StatelessWidget {
       child: const MainAppScreen(),
     ),
     const PharmacyMainView(),
-    const CartView(),
+    BlocProvider<CartCubit>(
+      create: (context) => CartCubit()..getCartItemFromDataBase(),
+      child: const CartView(),
+    ),
     const SettingsView()
   ];
 

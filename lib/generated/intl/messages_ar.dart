@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "en": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
         "lang": MessageLookupByLibrary.simpleMessage("اللغة"),
+        "locations": MessageLookupByLibrary.simpleMessage("البحث عن أماكن"),
         "logOut": MessageLookupByLibrary.simpleMessage("تسجيل خروج"),
         "notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
         "payment": MessageLookupByLibrary.simpleMessage("الدفع"),
@@ -36,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("البحث"),
         "settings": MessageLookupByLibrary.simpleMessage("الضبط"),
         "support": MessageLookupByLibrary.simpleMessage("الدعم والمساعدة"),
-        "theme": MessageLookupByLibrary.simpleMessage("الوضع المظلم")
+        "theme": MessageLookupByLibrary.simpleMessage("الوضع المظلم"),
+        "title": MessageLookupByLibrary.simpleMessage("Title")
       };
 }

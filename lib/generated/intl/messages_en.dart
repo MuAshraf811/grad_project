@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hello": MessageLookupByLibrary.simpleMessage("Hello"),
         "home": MessageLookupByLibrary.simpleMessage("home"),
         "lang": MessageLookupByLibrary.simpleMessage("Language"),
+        "locations": MessageLookupByLibrary.simpleMessage("Locations"),
         "logOut": MessageLookupByLibrary.simpleMessage("LogOut"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
         "payment": MessageLookupByLibrary.simpleMessage("payment"),
