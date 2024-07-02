@@ -20,3 +20,31 @@ final class SendingLogInDataWithError extends LogInState {
   final String errorMessage;
   const SendingLogInDataWithError({required this.errorMessage});
 }
+
+final class PostingOTP extends LogInState {}
+
+final class PostingOtpSuccess extends LogInState {
+  final String message;
+
+  PostingOtpSuccess({required this.message});
+}
+
+final class PostingOtpError extends LogInState {
+  final String message;
+
+  PostingOtpError({required this.message});
+}
+
+final class SendingNewPasswords extends LogInState {}
+
+final class SendingNewPasswordsSucess extends LogInState {
+  final String message;
+
+  SendingNewPasswordsSucess({required this.message});
+}
+
+final class SendingNewPasswordsError extends LogInState {
+  final String message;
+
+  SendingNewPasswordsError({required this.message});
+}

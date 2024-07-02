@@ -145,7 +145,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               : Colors.grey,
           fontFamily: FontConstants.poppinsFontFamily),
       decoration: InputDecoration(
-        fillColor: widget.fillColor ?? Colors.grey.withOpacity(0.22),
+        fillColor: widget.fillColor ?? Colors.grey.withOpacity(0.1),
         suffixIconConstraints: BoxConstraints(minHeight: 16.h, minWidth: 16.w),
         constraints: BoxConstraints(
           maxHeight: widget.textFormFieldHeight?.h ?? 52.h,

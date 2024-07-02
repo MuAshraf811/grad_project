@@ -15,74 +15,76 @@ class PharmacyMainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const VerticalSpacer(height: 32),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: CutomAppBarSearch(),
-                ),
-                HorizontalSpacer(width: 22),
-                ClickableChatIcon(),
-              ],
-            ),
-            const VerticalSpacer(height: 28),
-            BlocBuilder<PharmacyDataCubit, PharmacyDataState>(
-              builder: (context, state) {
-                if (state is FetchingPharmacyDetailsSuccess) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: context
-                          .read<PharmacyDataCubit>()
-                          .pharmacyData
-                          ?.length,
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            settings: RouteSettings(
-                                arguments: context
-                                    .read<PharmacyDataCubit>()
-                                    .pharmacyData),
-                            builder: (context) =>
-                                DetailedPharmacy(index: index),
-                          ));
-                        },
-                        child: pharmacyItem(
-                          pharmacyName: context
-                              .read<PharmacyDataCubit>()
-                              .pharmacyData![index]
-                              .pharmacyName,
-                          pharmacyImage: context
-                              .read<PharmacyDataCubit>()
-                              .pharmacyData![index]
-                              .pharmacyImagePath,
-                          pharmacyLOcation: context
-                              .read<PharmacyDataCubit>()
-                              .pharmacyData![index]
-                              .pharmacyLocation,
-                          pharmacyPhone: context
-                              .read<PharmacyDataCubit>()
-                              .pharmacyData![index]
-                              .phone!,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const VerticalSpacer(height: 32),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: CutomAppBarSearch(),
+                  ),
+                  HorizontalSpacer(width: 22),
+                  ClickableChatIcon(),
+                ],
+              ),
+              const VerticalSpacer(height: 28),
+              BlocBuilder<PharmacyDataCubit, PharmacyDataState>(
+                builder: (context, state) {
+                  if (state is FetchingPharmacyDetailsSuccess) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: context
+                            .read<PharmacyDataCubit>()
+                            .pharmacyData
+                            ?.length,
+                        itemBuilder: (context, index) => InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              settings: RouteSettings(
+                                  arguments: context
+                                      .read<PharmacyDataCubit>()
+                                      .pharmacyData),
+                              builder: (context) =>
+                                  DetailedPharmacy(index: index),
+                            ));
+                          },
+                          child: pharmacyItem(
+                            pharmacyName: context
+                                .read<PharmacyDataCubit>()
+                                .pharmacyData![index]
+                                .pharmacyName,
+                            pharmacyImage: context
+                                .read<PharmacyDataCubit>()
+                                .pharmacyData![index]
+                                .pharmacyImagePath,
+                            pharmacyLOcation: context
+                                .read<PharmacyDataCubit>()
+                                .pharmacyData![index]
+                                .pharmacyLocation,
+                            pharmacyPhone: context
+                                .read<PharmacyDataCubit>()
+                                .pharmacyData![index]
+                                .phone!,
+                          ),
                         ),
                       ),
+                    );
+                  }
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: 6,
+                      itemBuilder: (context, index) => const ShimmerPharmacy(),
                     ),
                   );
-                }
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: 6,
-                    itemBuilder: (context, index) => const ShimmerPharmacy(),
-                  ),
-                );
-              },
-            )
-          ],
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

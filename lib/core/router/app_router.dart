@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/core/constants/route_constants.dart';
 import 'package:graduation_project/features/cart/cubit/cart_cubit.dart';
 import 'package:graduation_project/features/home/logic/cubit/pharmacy/pharmacy_data_cubit.dart';
 import 'package:graduation_project/features/home/view/home_view.dart';
 import 'package:graduation_project/features/home/view/pharmacy_view.dart';
-import 'package:graduation_project/features/login/logic/logInCubit/log_in_cubit.dart';
+import 'package:graduation_project/features/login/logic/log_in_method.dart';
 import 'package:graduation_project/features/login/login_view.dart';
 import 'package:graduation_project/features/on_bording/views/on_boarding_view.dart';
 import 'package:graduation_project/features/register/otp.dart';
 import 'package:graduation_project/features/register/register_view.dart';
+import 'package:graduation_project/features/settings/logic/cubit/profile_cubit.dart';
+import 'package:graduation_project/features/settings/presentaion/profile_view.dart';
 import 'package:graduation_project/features/settings/presentaion/settings_view.dart';
 
 import '../../features/chat/presenation/views/all_chats_view.dart';
@@ -31,8 +34,12 @@ class AppRouter {
 
       case '/logIn':
         return MaterialPageRoute(
-            builder: (_) => BlocProvider<LogInCubit>(
-                  create: (context) => LogInCubit(),
+            builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<LogInMethodCubit>(
+                      create: (context) => LogInMethodCubit(),
+                    ),
+                  ],
                   child: LoginView(),
                 ));
 
@@ -48,6 +55,13 @@ class AppRouter {
 
       case '/Register':
         return MaterialPageRoute(builder: (_) => const RegisterView());
+      case RoutesConstants.profileView:
+        return MaterialPageRoute(
+            settings: settings,
+            builder: (_) => BlocProvider<ProfileCubit>(
+                  create: (context) => ProfileCubit(),
+                  child: const ProfileView(),
+                ));
 
       case '/mainChat':
         return MaterialPageRoute(

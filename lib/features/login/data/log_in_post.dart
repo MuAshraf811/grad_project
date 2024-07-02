@@ -7,13 +7,15 @@ class PostLogInData {
   static Future<Map<String, dynamic>> postData({
     required String email,
     required String password,
+    required String username,
   }) async {
     final url = Uri.parse('https://ikseer.onrender.com/accounts/login/');
     final response = await http.post(url, headers: {}, body: {
       "email": email,
       "password": password,
+      "username": username,
     });
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final res = jsonDecode(response.body);
       print(res.toString());
 
@@ -28,11 +30,12 @@ class PostLogInData {
         "code": response.statusCode,
         "massage": response.body
       };
-    } else {
-      if (kDebugMode) {
-        print('POST request failed with status code: ${response.body}');
-        print(response.statusCode.toString());
-      }
+    } else if (response.statusCode == 400) {
+      final res = jsonDecode(response.body);
+      return {
+        "message": res["non_field_errors"],
+        "code": response.statusCode,
+      };
     }
     throw Exception('error in log in post email and password');
   }

@@ -47,6 +47,7 @@ dependencies:
   google_maps_flutter: ^2.7.0
   hive: ^2.2.3
   http: ^1.2.1
+  image_picker: ^1.1.2
   intl_phone_number_input: ^0.7.4
   location: ^6.0.2
   lottie: ^2.7.0
@@ -81,6 +82,7 @@ flutter:
     - images/other/
     - assets/
     - assets/svgs/
+
   fonts:
     - family: Poppins
       fonts:

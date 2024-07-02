@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/constants/colors.dart';
+import 'package:graduation_project/core/constants/route_constants.dart';
 import 'package:graduation_project/core/dummy.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../core/styles/text_styles.dart';
 import '../../../generated/l10n.dart';
+import '../logic/cubit/profile_cubit.dart';
 import 'location_view.dart';
 import 'widgets/theme_switch.dart';
 import 'widgets/upper_profile_widget.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
-
   static const _titlesIcon = [
     Icons.account_box,
     Icons.location_city,
@@ -41,7 +48,68 @@ class SettingsView extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 28),
-            const UpperProfileWidget(),
+            BlocConsumer<ProfileCubit, ProfileState>(
+              listenWhen: (previous, current) =>
+                  current is FetchingUserInformationStateError ||
+                  current is FetchingUserInformationSuccessState,
+              listener: (context, state) {
+                if (state is FetchingUserInformationStateError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.red,
+                      margin: EdgeInsets.only(
+                          bottom: 24.h, right: 12.w, left: 12.w),
+                      duration: Duration(seconds: 4),
+                      showCloseIcon: true,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r)),
+                      content: Text(
+                        state.error,
+                        style:
+                            getMediumStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    ),
+                  );
+                }
+                if (state is FetchingUserInformationSuccessState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.teal.withOpacity(0.5),
+                      margin: EdgeInsets.only(
+                          bottom: 24.h, right: 12.w, left: 12.w),
+                      duration: Duration(seconds: 4),
+                      showCloseIcon: true,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r)),
+                      content: Text(
+                        'Hello ${state.data[0].firstName} ${state.data[0].lastName}',
+                        style:
+                            getMediumStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    ),
+                  );
+                }
+              },
+              buildWhen: (previous, current) =>
+                  current is FetchingUserInformationState ||
+                  current is FetchingUserInformationSuccessState,
+              builder: (context, state) {
+                if (state is FetchingUserInformationState) {
+                  return ShimmerINProfile();
+                }
+                if (state is FetchingUserInformationSuccessState) {
+                  return UpperProfileWidget(
+                    email: state.data[0].email,
+                    name:
+                        '${state.data[0].firstName} ${state.data[0].lastName}',
+                    image: state.data[0].image ?? '',
+                  );
+                }
+                return ShimmerINProfile();
+              },
+            ),
             const SizedBox(height: 14),
             const Padding(
               padding: EdgeInsets.only(left: 8.0),
@@ -64,16 +132,24 @@ class SettingsView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     splashColor: ConstantColors.appMainColor,
-                    onTap: () {
+                    onTap: () async {
                       switch (index) {
                         case 0:
+                          Navigator.of(context).pushNamed(
+                            RoutesConstants.profileView,
+                            arguments: context.read<ProfileCubit>().userInfo,
+                          );
                         case 1:
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => LocationView(),
                           ));
                         case 2:
                         case 3:
+                          await launchUrl(Uri.parse(
+                              'https://frontend-iksirs.vercel.app/en/home'));
                         case 4:
+                          await launchUrl(Uri.parse(
+                              'https://frontend-iksirs.vercel.app/en/home'));
                         case 5:
                           Navigator.pushReplacementNamed(context, '/logIn');
                       }
@@ -95,6 +171,51 @@ class SettingsView extends StatelessWidget {
                 },
                 itemCount: listTileTitles.length,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ShimmerINProfile extends StatelessWidget {
+  const ShimmerINProfile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.withOpacity(0.4),
+      highlightColor: Colors.white,
+      child: Container(
+        padding: EdgeInsets.all(4.w),
+        margin: EdgeInsets.all(6.w),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 34.w,
+              backgroundColor: Colors.grey.withOpacity(0.35),
+            ),
+            const HorizontalSpacer(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 200.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.35),
+                      borderRadius: BorderRadius.circular(6.r)),
+                ),
+                const VerticalSpacer(height: 14),
+                Container(
+                  width: 200.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.35),
+                      borderRadius: BorderRadius.circular(6.r)),
+                ),
+              ],
             ),
           ],
         ),

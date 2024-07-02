@@ -9,6 +9,7 @@ import 'package:graduation_project/features/home/logic/cubit/navigation_cubit.da
 import 'package:graduation_project/features/home/logic/cubit/product/cubit/product_cubit.dart';
 import 'package:graduation_project/features/home/view/main_app_screen.dart';
 import 'package:graduation_project/features/home/view/pharmacy_view.dart';
+import 'package:graduation_project/features/settings/logic/cubit/profile_cubit.dart';
 import 'package:graduation_project/features/settings/presentaion/settings_view.dart';
 import '../../cart/presentation/cart_view.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -39,7 +40,10 @@ class HomePageView extends StatelessWidget {
       create: (context) => CartCubit()..getCartItemFromDataBase(),
       child: const CartView(),
     ),
-    const SettingsView()
+    BlocProvider<ProfileCubit>(
+      create: (context) => ProfileCubit()..fetchUserData(),
+      child: const SettingsView(),
+    )
   ];
 
   @override
