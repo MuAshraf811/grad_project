@@ -179,7 +179,6 @@ class ProductDetailsView extends StatelessWidget {
                       child: BlocConsumer<CartCubit, CartState>(
                         listenWhen: (previous, current) =>
                             current is PostingDataToServerSuccess ||
-                            current is PostingDataToServer ||
                             current is PostingDataToServerError,
                         listener: (context, state) {
                           if (state is PostingDataToServerError) {
@@ -211,7 +210,7 @@ class ProductDetailsView extends StatelessWidget {
                                 duration: Duration(seconds: 4),
                                 padding: EdgeInsets.only(left: 32.w),
                                 margin: EdgeInsets.only(
-                                    bottom: 12.h, right: 8.w, left: 8.w),
+                                    bottom: 32.h, right: 8.w, left: 8.w),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.r)),
                                 content: Text(

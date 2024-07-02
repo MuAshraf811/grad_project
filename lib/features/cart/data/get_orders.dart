@@ -28,12 +28,7 @@ class ItemsCartCall {
     if (response.statusCode == 200) {
       await SharedPreferencesManager.storeStringVal(
           LocalStorageConstants.cartId, response.data['id']);
-      await SharedPreferencesManager.storeStringVal(
-          LocalStorageConstants.cartTotalPrice, response.data['total_price']);
-      debugPrint(
-          '######################### cart id ###########################');
-      debugPrint(
-          SharedPreferencesManager.getString(LocalStorageConstants.cartId));
+
       return response.data['items'];
     } else if (response.statusCode == 401) {
       debugPrint(response.data.toString());

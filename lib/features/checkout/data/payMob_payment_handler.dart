@@ -2,14 +2,22 @@ import 'package:dio/dio.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PayMobHandler {
-  static launchPay() async {
+  static launchPay(
+      {required String orderId,
+      required int amount,
+      required String name,
+      required String phone,
+      required String city}) async {
     final res = await _getAuthanticationToken();
 
     final response = await _getPaymentKey(
-      authanticationToken: res,
-      amount: (100 * 100).toString(),
-      currency: 'EGP',
-    );
+        authToken: res,
+        amountInCents: (amount * 100).toString(),
+        currency: "EGP",
+        orderId: orderId,
+        city: city,
+        name: name,
+        phone: phone);
 
     urlLauncher(response);
   }
@@ -23,39 +31,42 @@ class PayMobHandler {
     return response.data["token"];
   }
 
-  static Future<String> _getPaymentKey({
-    required String authanticationToken,
-    required String amount,
-    required String currency,
-  }) async {
+  static Future<String> _getPaymentKey(
+      {required String authToken,
+      required String amountInCents,
+      required String currency,
+      required String phone,
+      required String name,
+      required String city,
+      required String orderId}) async {
     final Response response = await Dio()
         .post("https://accept.paymob.com/api/acceptance/payment_keys", data: {
+      "auth_token": authToken,
+      "amount_cents": amountInCents, //! خد بالك السعر هنا بالقرش //!
       "expiration": 3600,
-      "auth_token": authanticationToken,
-      "order_id": "220484101",
-      "integration_id": 4538217,
-      "amount_cents": amount,
-      "currency": currency,
+      "order_id": orderId,
+//! it is String value //! note that this attribute has been fitched from second step as an integer value
       "billing_data": {
-        //Have To Be Values
-        "first_name": "Clifford",
-        "last_name": "Nicolas",
+        "apartment": "803",
         "email": "claudette09@exa.com",
-        "phone_number": "+86(8)9135210487",
-
-        //Can Set "NA"
-        "apartment": "NA",
-        "floor": "NA",
-        "street": "NA",
-        "building": "NA",
-        "shipping_method": "NA",
-        "postal_code": "NA",
-        "city": "NA",
-        "country": "NA",
-        "state": "NA"
+        "floor": "42",
+        "first_name": name,
+        "street": "Ethan Land",
+        "building": "8028",
+        "phone_number": phone,
+        "shipping_method": "PKG",
+        "postal_code": "01898",
+        "city": city,
+        "country": "CR",
+        "last_name": "Nicolas",
+        "state": "Utah"
       },
+      "currency": currency,
+      "integration_id": 4538217,
+//!  you can get it from your pay mob accound every payment method has its own id , wallets has its own id , cards also has its own id and so on
+      "lock_order_when_paid": "false"
     });
-    return response.data["token"];
+    return response.data['token'];
   }
 
   static urlLauncher(String paymentKey) {

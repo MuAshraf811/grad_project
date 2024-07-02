@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:graduation_project/core/constants/shared_pref_constants.dart';
 import 'package:graduation_project/core/localStorage/shared_preferences_storage.dart';
 import 'package:graduation_project/features/register/data/response_model.dart';
@@ -29,15 +28,10 @@ class CartPostDataToServer {
       ),
     );
 
-    debugPrint(
-        ' **********************************************Hello post cart method*****************************************');
-    if (response.statusCode == 201 ||
-        response.statusCode == 200 ||
-        response.statusCode == 400) {
-      debugPrint(
-          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! cart post sucess !!!!!!!!!!!!!!!!!!!!');
-      return ResponseModel(
-          message: response.data, statusCode: response.statusCode!);
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return ResponseModel(message: 'done', statusCode: response.statusCode!);
+    } else if (response.statusCode == 400) {
+      return ResponseModel(message: 'Error', statusCode: response.statusCode!);
     }
     throw Exception('error in post cart item');
   }

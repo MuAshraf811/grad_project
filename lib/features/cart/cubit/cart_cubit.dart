@@ -61,14 +61,13 @@ class CartCubit extends Cubit<CartState> {
 
       final res = await CartPostDataToServer.postCartItems(
           productId: productId, cartId: cartId, quantity: quantity);
-
-      emit(PostingDataToServerSuccess());
-
-      if (res.statusCode == 400) {
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        emit(PostingDataToServerSuccess());
+      } else if (res.statusCode == 400) {
         emit(PostingDataToServerError(error: 'Item already Exists in Cart'));
       }
     } catch (e) {
-      emit(PostingDataToServerError(error: 'Item already Exists in Cart'));
+      emit(PostingDataToServerError(error: e.toString()));
     }
   }
 
