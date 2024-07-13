@@ -25,9 +25,9 @@ class CartView extends StatelessWidget {
           child: Column(
             children: [
               const VerticalSpacer(height: 36),
-              CustomAppBar(
+              const CustomAppBar(
                 title: 'Cart View',
-                leading: const SizedBox.shrink(),
+                leading: SizedBox.shrink(),
               ),
               const VerticalSpacer(height: 28),
               Container(
@@ -52,13 +52,31 @@ class CartView extends StatelessWidget {
                               getMediumStyle(fontSize: 14, color: Colors.black),
                         ),
                         const HorizontalSpacer(width: 12),
-                        Text(
-                          '${SharedPreferencesManager.getString(LocalStorageConstants.cartTotalPrice)}',
-                          style: getBoldStyle(
-                            fontSize: 17,
-                            fontFamily: FontConstants.poppinsFontFamily,
-                            color: Colors.red,
-                          ).copyWith(letterSpacing: 1.w),
+                        BlocBuilder<CartCubit, CartState>(
+                          buildWhen: (previous, current) =>
+                              current is FetchingCartItems ||
+                              current is FetchingCartItemsSuccess,
+                          builder: (context, state) {
+                            if (state is FetchingCartItemsSuccess) {
+                              return Text(
+                                "${context.read<CartCubit>().totalAmount} EGP",
+                                style: getBoldStyle(
+                                  fontSize: 17,
+                                  fontFamily: FontConstants.poppinsFontFamily,
+                                  color: Colors.red,
+                                ).copyWith(letterSpacing: 1.w),
+                              );
+                            }
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.withOpacity(0.5),
+                              highlightColor: Colors.white,
+                              child: Container(
+                                width: 80.w,
+                                height: 22.h,
+                                color: Colors.grey.withOpacity(0.6),
+                              ),
+                            );
+                          },
                         )
                       ],
                     ),
@@ -66,8 +84,8 @@ class CartView extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => CheckOutFirstView(
-                            totalAmount: context.read<CartCubit>().totalAmount,
-                            delivery: 80,
+                            totalAmount: '58',
+                            delivery: 20,
                           ),
                         ));
                       },
@@ -95,11 +113,33 @@ class CartView extends StatelessWidget {
                               size: 14.w,
                             ),
                             const HorizontalSpacer(width: 8),
-                            Text(
-                              '${SharedPreferencesManager.getString(LocalStorageConstants.cartTotalPrice)} EGP',
-                              style: getMediumStyle(
-                                  fontSize: 14, color: Colors.white),
-                            ),
+                            BlocBuilder<CartCubit, CartState>(
+                              buildWhen: (previous, current) =>
+                                  current is FetchingCartItemsSuccess ||
+                                  current is FetchingCartItems,
+                              builder: (context, state) {
+                                if (state is FetchingCartItemsSuccess) {
+                                  return Text(
+                                    "${context.read<CartCubit>().totalAmount} EGP",
+                                    style: getBoldStyle(
+                                      fontSize: 17,
+                                      fontFamily:
+                                          FontConstants.poppinsFontFamily,
+                                      color: Colors.white,
+                                    ).copyWith(letterSpacing: 1.w),
+                                  );
+                                }
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey.withOpacity(0.5),
+                                  highlightColor: Colors.white,
+                                  child: Container(
+                                    width: 80.w,
+                                    height: 22.h,
+                                    color: Colors.grey.withOpacity(0.6),
+                                  ),
+                                );
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -122,7 +162,7 @@ class CartView extends StatelessWidget {
                       backgroundColor: Colors.teal.withOpacity(0.5),
                       margin: EdgeInsets.only(
                           bottom: 24.h, right: 12.w, left: 12.w),
-                      duration: Duration(seconds: 4),
+                      duration: const Duration(seconds: 4),
                       showCloseIcon: true,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r)),
@@ -136,7 +176,7 @@ class CartView extends StatelessWidget {
                           const HorizontalSpacer(width: 8),
                           Transform.scale(
                             scale: 0.4,
-                            child: CircularProgressIndicator.adaptive(
+                            child: const CircularProgressIndicator.adaptive(
                                 backgroundColor: Colors.white),
                           ),
                         ],
@@ -147,24 +187,12 @@ class CartView extends StatelessWidget {
                 buildWhen: (previous, current) =>
                     current is FetchingCartItems ||
                     current is FetchingCartItemsError ||
-                    current is FetchingCartItemsSuccess ||
-                    current is FetchingCartItemsError,
+                    current is FetchingCartItemsSuccess,
                 builder: (context, state) {
                   if (state is DeletingOrderError) {
                     return Text(state.error);
                   }
-                  if (state is FetchingCartItems) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CartShimmer(),
-                        const VerticalSpacer(height: 12),
-                        CartShimmer(),
-                        const VerticalSpacer(height: 12),
-                        CartShimmer(),
-                      ],
-                    );
-                  }
+
                   if (state is FetchingCartItemsSuccess) {
                     return Expanded(
                       child: ListView.builder(
@@ -186,7 +214,10 @@ class CartView extends StatelessWidget {
                                 .read<CartCubit>()
                                 .cartListFromDataBase[index]
                                 .productName,
-                            price: '33',
+                            price: context
+                                .read<CartCubit>()
+                                .cartListFromDataBase[index]
+                                .price,
                             onTap: index),
                       ),
                     );
@@ -199,7 +230,16 @@ class CartView extends StatelessWidget {
                       ),
                     );
                   }
-                  return Text('None');
+                  return const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CartShimmer(),
+                      VerticalSpacer(height: 12),
+                      CartShimmer(),
+                      VerticalSpacer(height: 12),
+                      CartShimmer(),
+                    ],
+                  );
                 },
               )
             ],

@@ -6,6 +6,7 @@ class DoctorsModel {
   final String doctorImage;
   final String specialization;
   final String email;
+  final String id;
 
   DoctorsModel({
     required this.firstName,
@@ -15,12 +16,14 @@ class DoctorsModel {
     required this.doctorImage,
     required this.specialization,
     required this.email,
+    required this.id,
   });
 
   factory DoctorsModel.fromJson(Map<String, dynamic> response) {
     return DoctorsModel(
         firstName: response['first_name'],
         lastName: response['last_name'],
+        id: response['id'],
         price: response['price_for_reservation'],
         location: response['location'],
         doctorImage: response['image'],

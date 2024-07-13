@@ -40,8 +40,12 @@ class HomePageView extends StatelessWidget {
       create: (context) => CartCubit()..getCartItemFromDataBase(),
       child: const CartView(),
     ),
-    BlocProvider<ProfileCubit>(
-      create: (context) => ProfileCubit()..fetchUserData(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<ProfileCubit>(
+          create: (context) => ProfileCubit()..fetchUserData(),
+        ),
+      ],
       child: const SettingsView(),
     )
   ];

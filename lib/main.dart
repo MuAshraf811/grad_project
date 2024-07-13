@@ -8,15 +8,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DioFactory.getDio();
   await SharedPreferencesManager.getSharedPref();
-  SharedPreferencesManager.getBool(LocalStorageConstants.onBoardingBoolKey) ==
-          null
-      ? await SharedPreferencesManager.storeBoolVal(
-          LocalStorageConstants.onBoardingBoolKey, false)
-      : null;
-  debugPrint(
-      'Hello, This is sharedPreferences onBoarding value checker in first time');
-  debugPrint(
-      SharedPreferencesManager.getBool(LocalStorageConstants.onBoardingBoolKey)
-          .toString());
+  // SharedPreferencesManager.getBool(LocalStorageConstants.onBoardingBoolKey) ==
+  //         null
+  await SharedPreferencesManager.storeBoolVal(
+      LocalStorageConstants.onBoardingBoolKey, false);
+  // : null;
+
   runApp(const DocDoc());
 }

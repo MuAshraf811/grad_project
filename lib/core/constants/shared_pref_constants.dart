@@ -4,4 +4,6 @@ class LocalStorageConstants {
   static const cartId = 'cartId';
   static const cartTotalPrice = 'cartTotalPrice';
   static const userId = 'userId';
+  static const ai_integration_key = 'AIzaSyBitpFU1OyYMIBEokhpAmEhhzq2utIO318';
+  static const profileId = 'myId';
 }

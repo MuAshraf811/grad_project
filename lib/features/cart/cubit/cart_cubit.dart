@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/core/constants/shared_pref_constants.dart';
+import 'package:graduation_project/core/localStorage/shared_preferences_storage.dart';
 import 'package:graduation_project/features/cart/data/get_orders.dart';
 import 'package:graduation_project/features/cart/data/post_cart.dart';
 import 'package:graduation_project/features/cart/model/cart_model.dart';
@@ -12,16 +14,15 @@ part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartInitial());
-  num totalAmount = 0;
+  String totalAmount = "0";
   final List<ProductDetailsModel> cartList = [];
   List<CartModel> cartListFromDataBase = [];
 
   calculateTotalAmount() {
-    totalAmount = 0;
-    for (int i = 0; i <= cartList.length - 1; i++) {
-      totalAmount = cartList[i].price + totalAmount;
-    }
-    ;
+    emit(NewTotalPriceLoadingState());
+    totalAmount = SharedPreferencesManager.getString(
+        LocalStorageConstants.cartTotalPrice)!;
+    emit(NewTotalPriceCurrentState());
   }
 
   addElementToCart(ProductDetailsModel element) {
@@ -31,7 +32,7 @@ class CartCubit extends Cubit<CartState> {
     emit(AddItemToCartState());
   }
 
-  RemoveElementFromCart(String itemId) {
+  removeElementFromCart(String itemId) {
     emit(LoadingCartChangeState());
     final index =
         cartListFromDataBase.indexWhere((element) => element.itemId == itemId);
@@ -80,7 +81,8 @@ class CartCubit extends Cubit<CartState> {
             (e) => CartModel.fromJson(e),
           )
           .toList();
-
+      totalAmount = SharedPreferencesManager.getString(
+          LocalStorageConstants.cartTotalPrice)!;
       emit(FetchingCartItemsSuccess());
     } catch (e) {
       emit(FetchingCartItemsError(errorMessage: e.toString()));

@@ -14,7 +14,7 @@ class DeleteOrderFromServer {
     final dio = Dio();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     final response = await dio.delete(
-      'https://ikseer.onrender.com/orders/cart-item/$itemId/',
+      'https://ikseer.azurewebsites.net/orders/cart-item/$itemId/',
       options: Options(
         headers: {
           'Authorization': 'Bearer $bearerToken',

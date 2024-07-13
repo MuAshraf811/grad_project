@@ -32,9 +32,9 @@ class BottomNavBarWidget extends StatelessWidget {
               icon: const Icon(Icons.home),
               label: S.of(context).home,
             ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.local_pharmacy_outlined),
-              label: 'Pharmacy',
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.local_pharmacy_outlined),
+              label: "Pharmacy",
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.shopping_bag),

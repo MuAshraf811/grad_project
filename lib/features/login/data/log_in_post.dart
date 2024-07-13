@@ -1,37 +1,37 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class PostLogInData {
   static Future<Map<String, dynamic>> postData({
+    /* */
     required String email,
     required String password,
     required String username,
   }) async {
-    final url = Uri.parse('https://ikseer.onrender.com/accounts/login/');
-    final response = await http.post(url, headers: {}, body: {
-      "email": email,
-      "password": password,
-      "username": username,
-    });
+    const url = 'https://ikseer.azurewebsites.net/accounts/login/';
+    final dio = Dio();
+    dio.interceptors.add(LogInterceptor(
+      error: true,
+      request: true,
+      requestBody: true,
+      requestHeader: true,
+      responseBody: true,
+      responseHeader: true,
+    ));
+    final response = await dio.post(
+      url,
+      data: {"email": email, "password": password, "username": username},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final res = jsonDecode(response.body);
-      print(res.toString());
-
-      if (kDebugMode) {
-        print('POST request successful! in log in');
-      }
-      if (kDebugMode) {
-        print('Response body: ${res['access']}');
-      }
+      final res = response.data;
       return {
         "token": res["access"],
+        "profile_id": res['profile_id'],
         "code": response.statusCode,
-        "massage": response.body
+        "massage": response.data
       };
     } else if (response.statusCode == 400) {
-      final res = jsonDecode(response.body);
+      final res = jsonDecode(response.data);
       return {
         "message": res["non_field_errors"],
         "code": response.statusCode,

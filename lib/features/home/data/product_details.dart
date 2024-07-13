@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class ProductDetailsResFetcher {
   static Future<List<dynamic>> getData() async {
-    final res = await http
-        .get(Uri.parse('https://ikseer.onrender.com/products/product/'));
+    final res =
+        await Dio().get('https://ikseer.azurewebsites.net/products/product/');
 
     if (res.statusCode == 200) {
-      final response = jsonDecode(res.body);
+      final response = res.data;
       return response['results'];
     }
 

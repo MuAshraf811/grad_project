@@ -46,3 +46,7 @@ final class DeletingOrderError extends CartState {
 
   DeletingOrderError({required this.error});
 }
+
+final class NewTotalPriceLoadingState extends CartState {}
+
+final class NewTotalPriceCurrentState extends CartState {}

@@ -35,7 +35,7 @@ class DoctorItem extends StatelessWidget {
             radius: 34.w,
             backgroundImage: NetworkImage(image),
           ),
-          VerticalSpacer(height: 6),
+          const VerticalSpacer(height: 6),
           Text(
             textAlign: TextAlign.center,
             maxLines: 2,
@@ -43,7 +43,7 @@ class DoctorItem extends StatelessWidget {
             name,
             style: getRegularStyle(fontSize: 12, color: Colors.black),
           ),
-          VerticalSpacer(height: 6),
+          const VerticalSpacer(height: 6),
           Text(
             textAlign: TextAlign.center,
             maxLines: 2,
@@ -51,7 +51,7 @@ class DoctorItem extends StatelessWidget {
             specialization,
             style: getRegularStyle(fontSize: 12, color: Colors.black),
           ),
-          VerticalSpacer(height: 6),
+          const VerticalSpacer(height: 6),
           Text(
             textAlign: TextAlign.center,
             maxLines: 2,
@@ -59,12 +59,12 @@ class DoctorItem extends StatelessWidget {
             location,
             style: getRegularStyle(fontSize: 12, color: Colors.black),
           ),
-          VerticalSpacer(height: 6),
+          const VerticalSpacer(height: 6),
           Text(
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            "${price} EGP",
+            "$price EGP",
             style: getMediumStyle(fontSize: 13, color: Colors.red),
           ),
         ],

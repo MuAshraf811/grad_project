@@ -10,7 +10,7 @@ class FetchingUserData {
     final dio = Dio();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     final response = await dio.get(
-      'https://ikseer.onrender.com/accounts/patient/',
+      'https://ikseer.azurewebsites.net/accounts/patient/',
       options: Options(
         headers: {
           'Authorization': 'Bearer $bearerToken',

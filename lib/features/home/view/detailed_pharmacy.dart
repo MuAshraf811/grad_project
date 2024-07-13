@@ -30,7 +30,7 @@ class DetailedPharmacy extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              VerticalSpacer(height: 24),
+              const VerticalSpacer(height: 24),
               Container(
                 height: 200.h,
                 decoration: BoxDecoration(
@@ -38,14 +38,14 @@ class DetailedPharmacy extends StatelessWidget {
                     color: Colors.grey,
                     image: DecorationImage(
                         image: NetworkImage(
-                          pha[index].pharmacyImagePath,
+                          pha[index].pharmacyImagePath!,
                         ),
                         fit: BoxFit.cover)),
               ),
               const VerticalSpacer(height: 26),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.local_pharmacy_rounded,
                     color: ConstantColors.appMainColor,
                   ),
@@ -68,7 +68,7 @@ class DetailedPharmacy extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.location_pin,
                     color: ConstantColors.appMainColor,
                   ),
@@ -96,7 +96,7 @@ class DetailedPharmacy extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.phone_android_outlined,
                     color: ConstantColors.appMainColor,
                   ),
@@ -119,7 +119,7 @@ class DetailedPharmacy extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.watch,
                     color: ConstantColors.appMainColor,
                   ),
@@ -142,7 +142,7 @@ class DetailedPharmacy extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.close,
                     color: ConstantColors.appMainColor,
                   ),

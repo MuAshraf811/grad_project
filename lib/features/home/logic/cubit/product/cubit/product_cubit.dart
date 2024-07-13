@@ -9,6 +9,22 @@ part 'product_state.dart';
 class AllProductCubit extends Cubit<ProductState> {
   AllProductCubit() : super(ProductInitial());
   List<ProductDetailsModel>? productDetails;
+  List<ProductDetailsModel> searchResults = [];
+  TextEditingController searchProductController = TextEditingController();
+  filterSearch({required String wantedProduct}) {
+    emit(LoadingSearchResultsState());
+    final res = productDetails
+        ?.where(
+          (element) => element.name.contains(wantedProduct),
+        )
+        .toList();
+    searchResults.clear();
+    searchResults.addAll(res ?? []);
+    if (res!.isNotEmpty) {
+      emit(LoadedSearchSuccessState());
+    }
+    emit(LoadedSearchEmptyState());
+  }
 
   getProductDetails() async {
     try {

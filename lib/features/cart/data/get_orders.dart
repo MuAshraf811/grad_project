@@ -17,7 +17,7 @@ class ItemsCartCall {
     final dio = Dio();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     final response = await dio.get(
-      'https://ikseer.onrender.com/orders/cart/',
+      'https://ikseer.azurewebsites.net/orders/cart/',
       options: Options(
         headers: {
           'Authorization': 'Bearer $bearerToken',
@@ -28,6 +28,8 @@ class ItemsCartCall {
     if (response.statusCode == 200) {
       await SharedPreferencesManager.storeStringVal(
           LocalStorageConstants.cartId, response.data['id']);
+      await SharedPreferencesManager.storeStringVal(
+          LocalStorageConstants.cartTotalPrice, response.data['total_price']);
 
       return response.data['items'];
     } else if (response.statusCode == 401) {

@@ -31,7 +31,7 @@ class ProductDetailsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const VerticalSpacer(height: 32),
-                  CustomAppBar(title: 'Product Details'),
+                  const CustomAppBar(title: 'Product Details'),
                   const VerticalSpacer(height: 24),
                   SizedBox(
                     height: 250.h,
@@ -231,11 +231,13 @@ class ProductDetailsView extends StatelessWidget {
                             return Container(
                               width: 180.w,
                               height: 40.h,
-                              decoration: BoxDecoration(color: Colors.teal),
+                              decoration:
+                                  const BoxDecoration(color: Colors.teal),
                               child: Center(
                                 child: Transform.scale(
                                   scale: 0.75,
-                                  child: CircularProgressIndicator.adaptive(
+                                  child:
+                                      const CircularProgressIndicator.adaptive(
                                     backgroundColor: Colors.white,
                                   ),
                                 ),
@@ -248,7 +250,7 @@ class ProductDetailsView extends StatelessWidget {
                                     productId: res[wantedindex].id,
                                     cartId: SharedPreferencesManager.getString(
                                         LocalStorageConstants.cartId)!,
-                                    quantity: 10,
+                                    quantity: 1,
                                   );
                             },
                             child: Container(
@@ -291,10 +293,15 @@ class ProductDetailsView extends StatelessWidget {
                         border: Border.all(color: Colors.teal),
                         borderRadius: BorderRadius.circular(6.r),
                       ),
-                      child: Icon(
-                        Icons.home,
-                        color: Colors.teal,
-                        size: 24.h,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(
+                          Icons.home,
+                          color: Colors.teal,
+                          size: 24.h,
+                        ),
                       ),
                     ),
                   ],

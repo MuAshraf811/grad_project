@@ -5,12 +5,12 @@ import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/constants/colors.dart';
 import 'package:graduation_project/core/constants/route_constants.dart';
 import 'package:graduation_project/core/dummy.dart';
+import 'package:graduation_project/features/settings/presentaion/our_location.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/styles/text_styles.dart';
 import '../../../generated/l10n.dart';
 import '../logic/cubit/profile_cubit.dart';
-import 'location_view.dart';
 import 'widgets/theme_switch.dart';
 import 'widgets/upper_profile_widget.dart';
 
@@ -18,29 +18,28 @@ class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
   static const _titlesIcon = [
     Icons.account_box,
-    Icons.location_city,
-    Icons.money,
+    Icons.map_outlined,
     Icons.help_center,
     Icons.star,
-    Icons.logout
+    Icons.logout,
+    Icons.question_mark,
   ];
   static const _iconsColor = [
     Colors.grey,
     Colors.redAccent,
-    Colors.green,
     Color.fromARGB(255, 6, 113, 201),
     Color.fromARGB(255, 238, 220, 56),
     Colors.red,
+    Colors.teal,
   ];
   @override
   Widget build(BuildContext context) {
     final listTileTitles = [
       S.of(context).account,
       S.of(context).locations,
-      S.of(context).payment,
       S.of(context).support,
       S.of(context).rate,
-      S.of(context).logOut
+      S.of(context).logOut,
     ];
     return Scaffold(
       body: Padding(
@@ -60,7 +59,7 @@ class SettingsView extends StatelessWidget {
                       backgroundColor: Colors.red,
                       margin: EdgeInsets.only(
                           bottom: 24.h, right: 12.w, left: 12.w),
-                      duration: Duration(seconds: 4),
+                      duration: const Duration(seconds: 4),
                       showCloseIcon: true,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r)),
@@ -79,7 +78,7 @@ class SettingsView extends StatelessWidget {
                       backgroundColor: Colors.teal.withOpacity(0.5),
                       margin: EdgeInsets.only(
                           bottom: 24.h, right: 12.w, left: 12.w),
-                      duration: Duration(seconds: 4),
+                      duration: const Duration(seconds: 4),
                       showCloseIcon: true,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r)),
@@ -97,7 +96,7 @@ class SettingsView extends StatelessWidget {
                   current is FetchingUserInformationSuccessState,
               builder: (context, state) {
                 if (state is FetchingUserInformationState) {
-                  return ShimmerINProfile();
+                  return const ShimmerINProfile();
                 }
                 if (state is FetchingUserInformationSuccessState) {
                   return UpperProfileWidget(
@@ -107,7 +106,7 @@ class SettingsView extends StatelessWidget {
                     image: state.data[0].image ?? '',
                   );
                 }
-                return ShimmerINProfile();
+                return const ShimmerINProfile();
               },
             ),
             const SizedBox(height: 14),
@@ -118,7 +117,7 @@ class SettingsView extends StatelessWidget {
                 child: ThemeSwitch(),
               ),
             ),
-            const SizedBox(height: 16),
+            const VerticalSpacer(height: 24),
             ListTile(
               leading: const Icon(
                 Icons.language,
@@ -127,6 +126,7 @@ class SettingsView extends StatelessWidget {
               title: Text(S.of(context).lang),
               trailing: const LangSwitch(),
             ),
+            const VerticalSpacer(height: 12),
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
@@ -141,7 +141,7 @@ class SettingsView extends StatelessWidget {
                           );
                         case 1:
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LocationView(),
+                            builder: (context) => const LocationHandlerView(),
                           ));
                         case 2:
                         case 3:
@@ -152,6 +152,11 @@ class SettingsView extends StatelessWidget {
                               'https://frontend-iksirs.vercel.app/en/home'));
                         case 5:
                           Navigator.pushReplacementNamed(context, '/logIn');
+
+                        // case 6:
+                        //   Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => Gemni(),
+                        //   ));
                       }
                     },
                     child: ListTile(

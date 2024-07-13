@@ -7,11 +7,11 @@ import 'package:graduation_project/features/home/logic/cubit/pharmacy/pharmacy_d
 import 'package:graduation_project/features/home/view/detailed_pharmacy.dart';
 import 'package:graduation_project/features/home/widgets/app_bar_search.dart';
 import 'package:graduation_project/features/home/widgets/chat_icon.dart';
+import 'package:graduation_project/features/settings/presentaion/location_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PharmacyMainView extends StatelessWidget {
   const PharmacyMainView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,18 +22,26 @@ class PharmacyMainView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const VerticalSpacer(height: 32),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: CutomAppBarSearch(),
+                  const Expanded(
+                    child: CutomAppBarSearch(
+                      isOut: true,
+                    ),
                   ),
-                  HorizontalSpacer(width: 22),
-                  ClickableChatIcon(),
+                  const HorizontalSpacer(width: 22),
+                  ClickableChatIcon(
+                    onTap: () {},
+                  ),
                 ],
               ),
               const VerticalSpacer(height: 28),
               BlocBuilder<PharmacyDataCubit, PharmacyDataState>(
+                buildWhen: (previous, current) =>
+                    current is FetchingPharmacyDetails ||
+                    current is FetchingPharmacyDetailsSuccess ||
+                    current is FetchingPharmacyDetailsError,
                 builder: (context, state) {
                   if (state is FetchingPharmacyDetailsSuccess) {
                     return Expanded(
@@ -42,8 +50,8 @@ class PharmacyMainView extends StatelessWidget {
                             .read<PharmacyDataCubit>()
                             .pharmacyData
                             ?.length,
-                        itemBuilder: (context, index) => InkWell(
-                          onTap: () {
+                        itemBuilder: (context, index) => PharmacyItem(
+                          onTapImage: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               settings: RouteSettings(
                                   arguments: context
@@ -53,28 +61,33 @@ class PharmacyMainView extends StatelessWidget {
                                   DetailedPharmacy(index: index),
                             ));
                           },
-                          child: pharmacyItem(
-                            pharmacyName: context
-                                .read<PharmacyDataCubit>()
-                                .pharmacyData![index]
-                                .pharmacyName,
-                            pharmacyImage: context
-                                .read<PharmacyDataCubit>()
-                                .pharmacyData![index]
-                                .pharmacyImagePath,
-                            pharmacyLOcation: context
-                                .read<PharmacyDataCubit>()
-                                .pharmacyData![index]
-                                .pharmacyLocation,
-                            pharmacyPhone: context
-                                .read<PharmacyDataCubit>()
-                                .pharmacyData![index]
-                                .phone!,
-                          ),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const LocationView(),
+                            ));
+                          },
+                          pharmacyName: context
+                              .read<PharmacyDataCubit>()
+                              .pharmacyData![index]
+                              .pharmacyName,
+                          pharmacyImage: context
+                                  .read<PharmacyDataCubit>()
+                                  .pharmacyData![index]
+                                  .pharmacyImagePath ??
+                              '',
+                          pharmacyLOcation: context
+                              .read<PharmacyDataCubit>()
+                              .pharmacyData![index]
+                              .pharmacyLocation,
+                          pharmacyPhone: context
+                              .read<PharmacyDataCubit>()
+                              .pharmacyData![index]
+                              .phone!,
                         ),
                       ),
                     );
                   }
+
                   return Expanded(
                     child: ListView.builder(
                       itemCount: 6,
@@ -100,7 +113,7 @@ class ShimmerPharmacy extends StatelessWidget {
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -109,7 +122,7 @@ class ShimmerPharmacy extends StatelessWidget {
               height: 80.0,
               color: Colors.grey,
             ),
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,19 +132,19 @@ class ShimmerPharmacy extends StatelessWidget {
                     height: 16.0,
                     color: Colors.grey,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Container(
                     width: double.infinity,
                     height: 16.0,
                     color: Colors.grey,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Container(
                     width: double.infinity,
                     height: 16.0,
                     color: Colors.grey,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Container(
                     width: double.infinity,
                     height: 16.0,
@@ -147,17 +160,22 @@ class ShimmerPharmacy extends StatelessWidget {
   }
 }
 
-class pharmacyItem extends StatelessWidget {
-  const pharmacyItem({
+class PharmacyItem extends StatelessWidget {
+  const PharmacyItem({
     super.key,
     required this.pharmacyName,
     required this.pharmacyImage,
     required this.pharmacyLOcation,
     required this.pharmacyPhone,
+    required this.onTap,
+    required this.onTapImage,
   });
   final String pharmacyName;
   final String pharmacyImage;
   final String pharmacyPhone;
+  final VoidCallback onTap;
+  final VoidCallback onTapImage;
+
   final String pharmacyLOcation;
   @override
   Widget build(BuildContext context) {
@@ -173,14 +191,17 @@ class pharmacyItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 70.w,
-            height: 90.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.r),
-              color: Colors.white,
-              image: DecorationImage(
-                  image: NetworkImage(pharmacyImage), fit: BoxFit.cover),
+          InkWell(
+            onTap: onTapImage,
+            child: Container(
+              width: 70.w,
+              height: 90.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                color: Colors.white,
+                image: DecorationImage(
+                    image: NetworkImage(pharmacyImage), fit: BoxFit.cover),
+              ),
             ),
           ),
           const HorizontalSpacer(width: 8),
@@ -208,6 +229,21 @@ class pharmacyItem extends StatelessWidget {
                   Text(
                     pharmacyPhone,
                     style: getRegularStyle(fontSize: 14, color: Colors.black87),
+                  ),
+                ],
+              ),
+              const VerticalSpacer(height: 6),
+              Row(
+                children: [
+                  Icon(Icons.location_on_outlined,
+                      size: 17.h, color: Colors.red),
+                  const HorizontalSpacer(width: 6),
+                  InkWell(
+                    onTap: onTap,
+                    child: Text(
+                      "Find in Google Maps",
+                      style: getRegularStyle(fontSize: 13, color: Colors.teal),
+                    ),
                   ),
                 ],
               ),

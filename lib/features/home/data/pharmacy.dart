@@ -1,17 +1,24 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class PharmacyDetaFetcher {
   static Future<List<dynamic>> getData() async {
-    final res = await http
-        .get(Uri.parse('https://ikseer.onrender.com/pharmacy/pharmacy/'));
+    final dio = Dio();
+    dio.interceptors.add(LogInterceptor(
+      error: true,
+      request: true,
+      requestBody: true,
+      requestHeader: true,
+      responseBody: true,
+      responseHeader: true,
+    ));
+    final res =
+        await dio.get('https://ikseer.azurewebsites.net/pharmacy/pharmacy/');
 
     if (res.statusCode == 200) {
-      final decodedResponse = utf8.decode(res.bodyBytes);
-      return jsonDecode(decodedResponse);
+      final decodedResponse = res.data;
+      return decodedResponse['results'];
     }
 
-    return ['mm'];
+    throw Exception('error in pharmacy endpoint');
   }
 }

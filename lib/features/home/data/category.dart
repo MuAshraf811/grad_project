@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 import '../../../core/constants/shared_pref_constants.dart';
 import '../../../core/localStorage/shared_preferences_storage.dart';
@@ -12,13 +10,16 @@ class CategoryDataFetcher {
     final Map<String, String> headers = {
       "Authorization": "Bearer $bearerToken",
     };
-    final res = await http.get(
-      Uri.parse('https://ikseer.onrender.com/products/category/'),
-      headers: headers,
+    final res = await Dio().get(
+      'https://ikseer.azurewebsites.net/products/category/',
+      options: Options(
+        headers: headers,
+      ),
     );
 
     if (res.statusCode == 200) {
-      return jsonDecode(res.body);
+      final ress = res.data;
+      return ress['results'];
     }
 
     return [''];

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
 import 'package:graduation_project/core/Commonwidgets%20(1)/svg_handler.dart';
-import 'package:graduation_project/core/constants/colors.dart';
 import 'package:graduation_project/core/styles/text_styles.dart';
 import 'package:graduation_project/features/home/view/home_view.dart';
 import 'package:graduation_project/features/login/custom_path.dart';
@@ -124,14 +123,14 @@ class LoginView extends StatelessWidget {
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
                             showCloseIcon: true,
-                            duration: Duration(seconds: 10),
+                            duration: const Duration(seconds: 10),
                             padding: EdgeInsets.only(left: 32.w),
                             margin: EdgeInsets.only(
                                 bottom: 18.h, right: 8.w, left: 8.w),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r)),
                             content: Text(
-                              'Enter a Valid Email And Password',
+                              state.errorMessage,
                               style: getMediumStyle(
                                   fontSize: 14, color: Colors.white),
                             ),

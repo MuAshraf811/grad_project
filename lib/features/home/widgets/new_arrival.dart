@@ -21,7 +21,7 @@ class NewArrivalItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 125.w,
-      margin: EdgeInsets.symmetric(horizontal: 8.w),
+      margin: EdgeInsets.only(left: 8.w, right: 8.w, bottom: 12.h),
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: ConstantColors.appMainColor),
@@ -86,7 +86,7 @@ class NewArrivalItem extends StatelessWidget {
           ),
           Divider(
             color: Colors.grey,
-            height: 18.h,
+            height: 12.h,
             endIndent: 12.w,
             indent: 12.w,
             thickness: 0.7,
@@ -97,7 +97,7 @@ class NewArrivalItem extends StatelessWidget {
               CircleAvatar(
                 radius: 10.w,
                 backgroundColor: Colors.red.withOpacity(0.45),
-                child: SvgHandler(
+                child: const SvgHandler(
                     imagePath: 'assets/svgs/heart.svg',
                     height: 16,
                     width: 16,

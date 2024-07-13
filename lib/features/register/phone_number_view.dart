@@ -123,6 +123,13 @@ class PhoneNumberView extends StatelessWidget {
                       //   context.customPush(const Otp());
                     }),
                 const SizedBox(height: 16),
+                CustomButton(
+                    text: 'Back',
+                    onTap: () {
+                      Navigator.of(context).pop();
+
+                      //   context.customPush(const Otp());
+                    }),
               ],
             ),
           ),

@@ -37,7 +37,7 @@ class PostingUserData {
       responseHeader: true,
     ));
     final response = await dio.patch(
-      'https://ikseer.onrender.com/accounts/patient/$id/',
+      'https://ikseer.azurewebsites.net/accounts/patient/$id/',
       data: formData,
       options: Options(
         headers: {

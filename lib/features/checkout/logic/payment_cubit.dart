@@ -16,7 +16,7 @@ class PaymentCubit extends Cubit<PaymentState> {
   paying() async {
     await PayMobHandler.launchPay(
         amount: 100,
-        orderId: '',
+        orderId: '225540988',
         city: addressController.text,
         phone: phoneNumberController.text,
         name: nameController.text);

@@ -17,3 +17,9 @@ final class FetchingProductDetailsError extends ProductState {
   final String error;
   const FetchingProductDetailsError({required this.error});
 }
+
+final class LoadingSearchResultsState extends ProductState {}
+
+final class LoadedSearchSuccessState extends ProductState {}
+
+final class LoadedSearchEmptyState extends ProductState {}

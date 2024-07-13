@@ -63,13 +63,15 @@ class LogInCubit extends Cubit<LogInState> {
       );
       await SharedPreferencesManager.storeStringVal(
           LocalStorageConstants.userToken, res['token']);
+      await SharedPreferencesManager.storeStringVal(
+          LocalStorageConstants.profileId, res['profile_id']);
       debugPrint(
           '<============  Hello this is token checker if stored  ============>');
       debugPrint(
           SharedPreferencesManager.getString(LocalStorageConstants.userToken));
       if (res['code'] == 200 || res['code'] == 201) {
         emit(SendingLogInDataSuccess(responseMessage: res['token']));
-      } else if (res['code' == 400]) {
+      } else if (res['code'] == 400) {
         emit(
             SendingLogInDataWithError(errorMessage: res['message'].toString()));
       }

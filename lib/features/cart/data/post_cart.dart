@@ -14,7 +14,7 @@ class CartPostDataToServer {
     final dio = Dio();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     final response = await dio.post(
-      'https://ikseer.onrender.com/orders/cart-item/',
+      'https://ikseer.azurewebsites.net/orders/cart-item/',
       data: {
         "quantity": quantity,
         "cart": cartId,

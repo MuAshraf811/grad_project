@@ -11,7 +11,7 @@ import 'package:graduation_project/features/login/widgets/custom_button.dart';
 class CheckOutFirstView extends StatelessWidget {
   const CheckOutFirstView(
       {super.key, required this.totalAmount, required this.delivery});
-  final num totalAmount;
+  final String totalAmount;
   final num delivery;
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class CheckOutFirstView extends StatelessWidget {
                             getMediumStyle(fontSize: 14, color: Colors.black),
                       ),
                       Text(
-                        (delivery + totalAmount).toString(),
+                        (delivery + num.parse(totalAmount)).toString(),
                         style: getMediumStyle(fontSize: 15, color: Colors.teal),
                       ),
                     ],
@@ -126,8 +126,8 @@ class CheckOutFirstView extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                       labelStyle:
                           getRegularStyle(fontSize: 12, color: Colors.grey),
-                      suffixIcon:
-                          Icon(Icons.location_on_outlined, color: Colors.teal),
+                      suffixIcon: const Icon(Icons.location_on_outlined,
+                          color: Colors.teal),
                       fillColor: Colors.grey.withOpacity(0.06),
                       borderRaduis: 4.r,
                     ),
@@ -149,7 +149,7 @@ class CheckOutFirstView extends StatelessWidget {
                       labelStyle:
                           getRegularStyle(fontSize: 12, color: Colors.grey),
                       fillColor: Colors.grey.withOpacity(0.06),
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         Icons.phone_android_outlined,
                         color: Colors.teal,
                       ),
@@ -170,7 +170,7 @@ class CheckOutFirstView extends StatelessWidget {
                       labelStyle:
                           getRegularStyle(fontSize: 12, color: Colors.grey),
                       fillColor: Colors.grey.withOpacity(0.06),
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         Icons.person_2_outlined,
                         color: Colors.teal,
                       ),
@@ -195,7 +195,7 @@ class CheckOutFirstView extends StatelessWidget {
                     labelStyle:
                         getRegularStyle(fontSize: 12, color: Colors.grey),
                     fillColor: Colors.grey.withOpacity(0.06),
-                    suffixIcon: Icon(
+                    suffixIcon: const Icon(
                       Icons.discount_outlined,
                       color: Colors.teal,
                     ),

@@ -9,7 +9,9 @@ class PharmacyView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const CutomAppBarSearch(),
+        title: const CutomAppBarSearch(
+          isOut: false,
+        ),
         centerTitle: true,
         elevation: 2,
       ),

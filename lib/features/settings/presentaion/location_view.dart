@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/core/Commonwidgets%20(1)/spacers.dart';
+import 'package:graduation_project/features/home/view/product_details_view.dart';
 import 'package:location/location.dart';
 
 class LocationView extends StatefulWidget {
-  const LocationView({super.key});
-
+  const LocationView(
+      {super.key, this.lat = 31.5, this.long = 30.5, this.title});
+  final double? lat;
+  final double? long;
+  final String? title;
   @override
   State<LocationView> createState() => _LocationView();
 }
@@ -12,11 +18,12 @@ class LocationView extends StatefulWidget {
 class _LocationView extends State<LocationView> {
   Location location = Location();
   final Map<String, Marker> _markers = {};
+  late final Set<Marker> allMarkers;
 
   double latitude = 0;
   double longitude = 0;
   GoogleMapController? _controller;
-  final CameraPosition _kGooglePlex = CameraPosition(
+  final CameraPosition _kGooglePlex = const CameraPosition(
     target: LatLng(26.8206, 30.8025),
     zoom: 10,
   );
@@ -44,11 +51,12 @@ class _LocationView extends State<LocationView> {
     LocationData currentPosition = await location.getLocation();
     latitude = currentPosition.latitude!;
     longitude = currentPosition.longitude!;
+
     final marker = Marker(
       markerId: const MarkerId('myLocation'),
       position: LatLng(latitude, longitude),
       infoWindow: const InfoWindow(
-        title: 'you can add any message here',
+        title: 'This is your location',
       ),
     );
     setState(() {
@@ -64,44 +72,78 @@ class _LocationView extends State<LocationView> {
   @override
   void initState() {
     getCurrentLocation();
+    allMarkers = {
+      Marker(
+        markerId: const MarkerId("your destination"),
+        position: LatLng(widget.lat!, widget.long!),
+        onDrag: (value) {},
+      ),
+      Marker(
+        markerId: const MarkerId('Your Current Location'),
+        position: LatLng(latitude, longitude),
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: const InfoWindow(
+          title: 'This is your location',
+        ),
+      ),
+    };
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Stack(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            width: double.infinity,
-            height: double.infinity,
-            child: GoogleMap(
-              mapType: MapType.terrain,
-              myLocationEnabled: true,
-              initialCameraPosition: _kGooglePlex,
-              markers: _markers.values.toSet(),
-              onTap: (LatLng latlng) {
-                latitude = latlng.latitude;
-                longitude = latlng.longitude;
-                final marker = Marker(
-                  markerId: const MarkerId('myLocation'),
-                  position: LatLng(latitude, longitude),
-                  infoWindow: const InfoWindow(
-                    title: 'AppLocalizations.of(context).will_deliver_here',
+      floatingActionButton: InkWell(
+        onTap: () {},
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.teal,
+              ),
+              borderRadius: BorderRadius.circular(12.r)),
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const VerticalSpacer(height: 24),
+            const CustomAppBar(title: 'Find Our Locations'),
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: GoogleMap(
+                    mapType: MapType.terrain,
+                    myLocationEnabled: true,
+                    compassEnabled: true,
+                    initialCameraPosition:
+                        CameraPosition(target: LatLng(latitude, longitude)),
+                    markers: allMarkers,
+                    onTap: (LatLng latlng) {
+                      latitude = latlng.latitude;
+                      longitude = latlng.longitude;
+                    },
+                    onMapCreated: (GoogleMapController controller) async {
+                      await controller
+                          .animateCamera(CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: LatLng(
+                              widget.lat ?? latitude, widget.long ?? longitude),
+                          zoom: 13,
+                        ),
+                      ));
+                    },
                   ),
-                );
-                setState(() {
-                  _markers['myLocation'] = marker;
-                });
-              },
-              onMapCreated: (GoogleMapController controller) {
-                _controller = controller;
-              },
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

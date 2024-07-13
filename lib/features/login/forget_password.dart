@@ -7,7 +7,6 @@ import 'package:graduation_project/features/login/logic/logInCubit/log_in_cubit.
 import 'package:graduation_project/features/login/otp.dart';
 import 'package:graduation_project/features/login/widgets/custom_button.dart';
 import 'package:graduation_project/features/login/widgets/custom_text_form_field.dart';
-import 'package:graduation_project/features/register/otp.dart';
 
 class ForgetPassWordView extends StatelessWidget {
   const ForgetPassWordView({super.key});

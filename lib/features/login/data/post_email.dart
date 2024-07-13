@@ -14,7 +14,7 @@ class PostEmailToGetOTP {
     final dio = Dio();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     final response = await dio.post(
-      'https://ikseer.onrender.com/accounts/otp-by-email/',
+      'https://ikseer.azurewebsites.net/accounts/otp-by-email/',
       data: {
         "email": email,
       },

@@ -56,7 +56,7 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
           widget.title,
           style: getRegularStyle(
                   fontSize: 14,
-                  color: widget.titleColor ?? Colors.black54,
+                  color: widget.titleColor ?? Colors.black87,
                   fontFamily: FontConstants.poppinsFontFamily)
               .copyWith(letterSpacing: 1, fontWeight: FontWeight.w500),
         ),
