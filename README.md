@@ -161,7 +161,7 @@ cd grad_project
 flutter pub get
 
 # 3. Generate localisation files
-flutter pub run intl_utils:generate   # or: dart run intl_utils:generate
+dart run intl_utils:generate
 
 # 4. Add your keys (see lib/core/constants/shared_pref_constants.dart and
 #    android/app/src/main/AndroidManifest.xml for the Maps key)
